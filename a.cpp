@@ -1,4 +1,5 @@
 
+#include<ctime>
 #include <iostream>
 #include <conio.h>
 #include <string.h>
@@ -61,9 +62,12 @@ void buscarTutor(Animal[], Tutor[], Cidade[], int&);
 void realizarConsulta(Consulta[], Animal[], Tutor[], Raca[], Veterinario[], Cidade[], int&);
 void buscarAnimal(Consulta[], Animal[], Tutor[], Raca[], int&);
 void buscarVeterinario(Consulta[], Veterinario[], Cidade[], int&);
+void intervaloData(Consulta[], Animal[], Veterinario[], int&, int&, int&);
+time_t converterStringParaData(string&);
+void mostrarConsultaPorIntervalo(Consulta[], Animal[], Veterinario[], string&, string&, int&, int&, int&);
 int main()
 {
-    int contCid = 1, contTutor = 1, contAnimal, contConsul;
+    int contCid = 1, contTutor = 1, contAnimal, contConsul, contVet;
     Cidade cid[t]{2, "avgre", "sp"};
     Raca raca[t];
     Tutor tutor[t]{1, "asdf", "435.284.888-32", "aaa", 2};
@@ -73,6 +77,7 @@ int main()
     registroTutores(tutor, cid, &contTutor, &contCid);
     registroAnimais(animal, raca, tutor, cid, contAnimal);
 	realizarConsulta(consul, animal, tutor, raca, vet, cid, contConsul);
+    intervaloData(consul, animal, vet, contAnimal, contVet, contConsul);
 }
 
 void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
@@ -242,6 +247,55 @@ void realizarConsulta(Consulta a[], Animal animal[], Tutor tutor[], Raca raca[],
 	}
 }
 
+void intervaloData(Consulta a[], Animal animal[], Veterinario vet[], int &contAnimal, int &contVet, int &contA){
+    string dataInicial, dataFinal;
+    cout<<"\ndigite a data inicial: ";
+    cin>>dataInicial;
+    cout<<"\ndigite a data final: ";
+    cin>>dataFinal;
+    mostrarConsultaPorIntervalo(a, animal, vet, dataInicial, dataFinal, contAnimal, contVet, contA);
+}
+
+
+void mostrarConsultaPorIntervalo(Consulta a[], Animal animal[], Veterinario vet[], string &dataInicial, string &dataFinal, int &contAnimal, int &contVet, int &contA){
+    time_t inicio = converterStringParaData(dataInicial);
+    time_t final = converterStringParaData(dataFinal);
+    float s=0;
+    int j=0, achou;
+    for(int i=0; i<contA; i++){
+        string data = a[i].data;
+        time_t dataConsulta = converterStringParaData(data);
+        if(data >= inicio && data <= final){
+            cout<<"\nconsulta na data: "<< a[i].data;
+            cout<<"\nno valor: "<<a[i].valor;
+            s= s+a[i].valor;
+            achou=0;
+                while(achou == 0){
+                    if(a[i].codigo_animal == animal[j].codigo){
+                    cout<<"\nanimal consultado: "<< animal[j].nome;
+                    }
+                    if(a[i].codigo_veterinario == vet[j].codigo){
+                    cout<<"\nnome do veterinario que consultou: " << vet[j].nome;
+                    achou++;
+                    }
+                    j++;
+            }
+        }
+    }
+    if(s == 0){
+        cout<<"\nnenhuma consulta encontrada!!!!";
+    }else{
+        cout<<"\nvalor total da consulta: "<< s;
+    }    
+}
+
+time_t converterStringParaData(string &data){
+    tm tm = {};
+    istringstream is(data);
+    is >> get_time(&tm, "%d/%m/%Y");
+    return mktime(&tm);
+}
+
 void buscarRaca(Animal a[], Raca b[], int &i){
     int achou=0;
 	while(achou == 0){
@@ -402,3 +456,4 @@ void buscarVeterinario(Consulta a[], Veterinario b[], Cidade c[], int& i){
 			}
 		}
 }
+
