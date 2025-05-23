@@ -259,12 +259,11 @@ void intervaloData(Consulta a[], Animal animal[], Veterinario vet[], int &contA)
     mostrarConsultaPorIntervalo(a, animal, vet, dataInicial, dataFinal, contA);
 }
 
-void intervaloDataVet(Consulta a[], Animal animal[], Veterinario vet[], Cidade cidade[], int &contVet, int &contA){
+void intervaloDataVet(Consulta a[], Animal animal[], Veterinario vet[], Cidade cidade[], int &contVet, int &contA, int &contCid){
     string dataInicial, dataFinal;
     int codigo;
     cout<<"\ndigite o codigo do veterinario: ";
     cin>>codigo;
-    buscarVeterinario(a, vet, cidade, contVet);
     cout<<"\ndigite a data inicial: ";
     cin>>dataInicial;
     cout<<"\ndigite a data final: ";
@@ -308,38 +307,39 @@ void mostrarConsultaPorIntervaloVet(Consulta a[], Animal animal[], Veterinario v
     time_t inicio = converterStringParaData(dataInicial);
     time_t final = converterStringParaData(dataFinal);
     float s=0;
-    int j=0, achou;
-    for(int i=0; i<contVet; i++){
-        string data = a[i].data;
-        time_t dataConsulta = converterStringParaData(data);
-            if(vet[i].codigo == codigo){
-                cout<<"\nVeterinario: "<<vet[i].nome;
-             while(j< contA){
-             if(dataConsulta >= inicio && dataConsulta <= final){
-            cout<<"\nconsulta na data: "<< a[i].data;
-            cout<<"\nno valor: "<<a[i].valor;
-            s= s+a[i].valor;
-            achou=0;
-             }
-           }
-        }
-        j=0;
-        while(achou == 0){
-           if(a[i].codigo_animal == animal[j].codigo){
-             cout<<"\nanimal consultado: "<< animal[j].nome;
-             }
-           if(a[i].codigo_veterinario == vet[j].codigo){
-             cout<<"\nnome do veterinario que consultou: " << vet[j].nome;
-             achou++;
-           }
-                    j++;
+    int j=0, achou, achouVet=0, i;
+     while(achouVet == 0){
+        for(i=0; i<contVet; i++){
+            string data = a[i].data;
+            time_t dataConsulta = converterStringParaData(data);
+                if(vet[i].codigo == codigo){
+                    cout<<"\nVeterinario: "<<vet[i].nome;
+                 while(j< contA){
+                 if(dataConsulta >= inicio && dataConsulta <= final){
+                cout<<"\nconsulta na data: "<< a[i].data;
+                cout<<"\nno valor: "<<a[i].valor;
+                s= s+a[i].valor;
+                achou=0;
+                 }
+               }
+               achouVet++;
             }
         }
-        if(s == 0){
-        cout<<"\nnenhuma consulta encontrada!!!!";
-    }else{
-        cout<<"\nvalor total que o veterinario rendeu: "<< s;
-    }  
+        if(achouVet == 0){
+            cout<<"codigo nao encontrado. Digite o codigo novamente: ";
+            cin>>codigo;
+        }
+     }
+     for(; j<contA; j++){
+        if(a[i].codigo_animal == animal[j].codigo){
+          cout<<"\nanimal consultado: "<< animal[j].nome;
+          }
+        if(a[i].codigo_veterinario == vet[j].codigo){
+          cout<<"\nnome do veterinario que consultou: " << vet[j].nome;
+          achou++;
+        }
+     }
+    cout<<"\nvalor total que o veterinario rendeu: "<< s;  
 }
       
 time_t converterStringParaData(string &data){
@@ -511,4 +511,3 @@ void buscarVeterinario(Consulta a[], Veterinario b[], Cidade c[], int& i, int& c
 			}
 		}
 }
-
