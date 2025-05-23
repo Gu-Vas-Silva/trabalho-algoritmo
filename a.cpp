@@ -53,12 +53,12 @@ struct Consulta
 };
 void registroTutores(Tutor[], Cidade[], int *, int *);
 bool validarCpf(Tutor[], int &);
-void buscarEstado(Tutor[], Cidade[], int &);
-void registroAnimais(Animal[], Raca[], Tutor[], Cidade[], int &, int &);
+void buscarEstado(Tutor[], Cidade[], int &, int&);
+void registroAnimais(Animal[], Raca[], Tutor[], Cidade[], int &, int &, int&, int&);
 void buscarRaca(Animal[], Raca[], int&, int&);
 void buscarTutor(Animal[], Tutor[], Cidade[], int&, int&, int&);
-void realizarConsulta(Consulta[], Animal[], Tutor[], Raca[], Veterinario[], Cidade[], int&);
-void buscarAnimal(Consulta[], Animal[], Tutor[], Raca[], int&, int&, int&, int&);
+void realizarConsulta(Consulta[], Animal[], Tutor[], Raca[], Veterinario[], Cidade[], int&, int&, int&, int&, int&);
+void buscarAnimal(Consulta[], Animal[], Tutor[], Raca[], int&, int&, int&);
 void buscarVeterinario(Consulta[], Veterinario[], Cidade[], int&, int&, int&);
 void intervaloData(Consulta[], Animal[], Veterinario[], int&);
 time_t converterStringParaData(string&);
@@ -75,8 +75,8 @@ int main()
     Veterinario vet[100];
     Consulta consul[100];
     registroTutores(tutor, cid, &contTutor, &contCid);
-    registroAnimais(animal, raca, tutor, cid, contAnimal, contRaca);
-	realizarConsulta(consul, animal, tutor, raca, vet, cid, contConsul);
+    registroAnimais(animal, raca, tutor, cid, contAnimal, contRaca, contCid, contTutor);
+	realizarConsulta(consul, animal, tutor, raca, vet, cid, contConsul, contRaca, contAnimal, contVet, contCid);
     intervaloData(consul, animal, vet, contConsul);
     intervaloDataVet(consul, animal, vet, cid, contVet, contConsul);
 }
@@ -165,7 +165,7 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
     }
 }
 
-void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], int &contA, int &contRaca)
+void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], int &contA, int &contRaca, int &contCid, int& contTutor)
 {
     Animal b[100];
     int contB, i = 0, contT, k = 0, j = 0;
@@ -185,7 +185,7 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
         cin >> a[i].peso;
         cout << "\ncodigo tutor: ";
         cin >> a[i].codigo_tutor;
-        buscarTutor(a, tutor, cidade, i);
+        buscarTutor(a, tutor, cidade, i, contCid, contTutor);
         cout << "\ndigite 0 para parar";
         cin >> saida;
     }
@@ -232,16 +232,16 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
     }
 }
 
-void realizarConsulta(Consulta a[], Animal animal[], Tutor tutor[], Raca raca[], Veterinario vet[], Cidade cid[], int &contA){
+void realizarConsulta(Consulta a[], Animal animal[], Tutor tutor[], Raca raca[], Veterinario vet[], Cidade cid[], int &contA, int& contRaca, int& contAnimal, int& contVet, int& contCid){
 	int i= contA + 1;
 	for(int saida=1;i<100&&saida!=0;i++){
 		a[i].codigo = i;
 		cout<<"\ncodigo do animal: ";
 		cin>>a[i].codigo_animal;
-		buscarAnimal(a, animal, tutor, raca, i);
+		buscarAnimal(a, animal, tutor, raca, i, contRaca, contAnimal);
 		cout<<"\ncodigo do veterinario: ";
 		cin>>a[i].codigo_veterinario;
-		buscarVeterinario(a, vet, cid, i);
+		buscarVeterinario(a, vet, cid, i, contVet, contCid);
 		cin.ignore();
 		cout<<"\ndata: ";
 		getline(cin, a[i].data);
@@ -444,11 +444,11 @@ bool validarCpf(Tutor a[], int &i)
     return true;
 }
 
-void buscarEstado(Tutor a[], Cidade b[], int &i, int *contCid)
+void buscarEstado(Tutor a[], Cidade b[], int &i, int &contCid)
 {
     int cont = 0;
 	while(cont == 0){
-	for (int j = 0; j < *contCid; j++)
+	for (int j = 0; j < contCid; j++)
     {
         if (a[i].codigo_cidade == b[j].codigo)
         {
@@ -465,7 +465,7 @@ void buscarEstado(Tutor a[], Cidade b[], int &i, int *contCid)
 	}  
 }
 
-void buscarAnimal(Consulta a[], Animal b[], Tutor c[], Raca d[], int& i, int& cont, int &contAnimal, int &contRaca){
+void buscarAnimal(Consulta a[], Animal b[], Tutor c[], Raca d[], int& i, int &contAnimal, int &contRaca){
 	int k, achou=0;
 	while(achou == 0){
 		for(int j=0; j<contAnimal; j++){
