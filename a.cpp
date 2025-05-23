@@ -105,7 +105,7 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
         cout << "codigo da cidade" << endl;
         cin >> c[i].codigo_cidade;
         cin.ignore();
-        buscarEstado(c, b, i, contCid);
+        buscarEstado(c, b, i, *contCid);
         cout << "digite 0 para sair ou qualquer outro numero para continuar: " << endl;
         cin >> saida;
         cin.ignore();
