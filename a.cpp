@@ -51,10 +51,10 @@ struct Consulta
     string data;
     float valor;
 };
-void leituraConsulta(Consulta[], int&);
+void leituraConsulta(Consulta[], int&, Animal[], Tutor [], Raca[], Veterinario[], Cidade[] , int&, int &,int &, int&);
 void leituraVet(Veterinario [], int &);
-void leituraAnimal(Animal [], int &);
-void leituraTutor(Tutor [], int &);
+void leituraAnimal(Animal [], int &, Tutor[], Cidade[], int &, int&);
+void leituraTutor(Tutor [], Cidade[], int&, int &);
 void leituraRaca(Raca [], int &);
 void leituraCid( Cidade [], int &);
 
@@ -82,10 +82,10 @@ int main()
     Animal animal[100];
     Veterinario vet[100];
     Consulta consul[100];
-    leituraConsulta(consul, contConsul);
+    leituraConsulta(consul, contConsul, animal, tutor, raca,vet,cid, contAnimal, contRaca,contVet,contCid);
     leituraVet(vet, contVet);
-    leituraAnimal(animal, contAnimal);
-    leituraTutor(tutor, contTutor);
+    leituraAnimal(animal, contAnimal, tutor, cid, contTutor, contCid);
+    leituraTutor(tutor, cid, contTutor, contCid);
     leituraRaca(raca, contRaca);
     leituraCid(cid, contCid);
     int c;
@@ -586,7 +586,7 @@ void leituraRaca(Raca v[], int &contRaca ){
 
 }
 
-void leituraTutor(Tutor v[], int &contTutor){
+void leituraTutor(Tutor v[], Cidade cidade[], int &contTutor, int &contCid){
     int i=0;
     for (int saida =1;i<100 && saida !=0;i++){
         cout <<"Codigo Tutor:";
@@ -605,13 +605,14 @@ void leituraTutor(Tutor v[], int &contTutor){
         getline(cin, v[i].endereco);
         cout<<"Codigo da Cidade do Tutor:";
         cin>>v[i].codigo_cidade;
+        buscarEstado(v, cidade, i, contCid);
         cout<<"digite 0 para parar:";
         cin>>saida;
     }
     contTutor= i-1;
 
 }
-void leituraAnimal(Animal v[], int &contAnimal){
+void leituraAnimal(Animal v[], int &contAnimal, Tutor b[],Cidade c[], int &contTutor, int &contCid){
     int i=0;
     for(int saida =1; i<100 && saida!=0;i++){
         cout<<"Codigo do Animal:";
@@ -627,6 +628,7 @@ void leituraAnimal(Animal v[], int &contAnimal){
         cin>>v[i].peso;
         cout<<"Codigo do Tutor:";
         cin>>v[i].codigo_tutor;
+        buscarTutor( v,b,c,i, contTutor, contCid);
         cout<<"digite 0 para parar:";
         cin>>saida;
     }
@@ -651,15 +653,17 @@ void leituraVet(Veterinario v[], int &contVet){
     contVet=i-1;
 }
 
-void leituraConsulta(Consulta v[], int &contConsulta){
+void leituraConsulta(Consulta v[], int &contConsulta, Animal b[], Tutor c[], Raca d[], Veterinario vet[], Cidade cid[],int &contAnimal, int &contRaca, int& contVet, int& contCid){
     int i=0;
     for(int saida=1;i<100 && saida!=0;i++){
         cout<<"Codigo da Consulta:";
         cin>>v[i].codigo;
         cout<<"Codigo do Animal:";
         cin>>v[i].codigo_animal;
+        buscarAnimal( v, b, c,d, i, contAnimal, contRaca);
         cout<<"Codigo do veterinario:";
         cin>>v[i].codigo_veterinario;
+        buscarVeterinario(v, vet, cid, i, contVet, contCid);
         cout<<"Data da consulta:";
         cin>>v[i].data;
         cout<<"Valor da consulta:";
