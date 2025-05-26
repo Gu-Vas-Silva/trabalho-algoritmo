@@ -52,15 +52,15 @@ struct Consulta
     float valor;
 };
 void leituraConsulta(Consulta[], int&, Animal[], Tutor [], Raca[], Veterinario[], Cidade[] , int&, int &,int &, int&);
-void leituraVet(Veterinario [], int &);
-void leituraAnimal(Animal [], int &, Tutor[], Cidade[], int &, int&);
+void leituraVet(Veterinario [], Cidade[], int&, int &);
+void leituraAnimal(Animal [], int &, Tutor[], Cidade[], Raca[], int&, int &, int&);
 void leituraTutor(Tutor [], Cidade[], int&, int &);
 void leituraRaca(Raca [], int &);
 void leituraCid( Cidade [], int &);
 
 
 void registroTutores(Tutor[], Cidade[], int *, int *);
-bool validarCpf(Tutor[], int &);
+void validarCpf(Tutor[], int &);
 void buscarEstado(Tutor[], Cidade[], int &, int&);
 void registroAnimais(Animal[], Raca[], Tutor[], Cidade[], int &, int &, int&, int&);
 void buscarRaca(Animal[], Raca[], int&, int&);
@@ -75,24 +75,26 @@ void intervaloDataVet(Consulta[], Animal[], Veterinario[], int&, int&);
 void mostrarConsultaPorIntervaloVet(Consulta[], Animal[], Veterinario[], string&, string&, int&, int&, int&);
 int main()
 {
-    int contCid = 1, contTutor = 1, contAnimal, contConsul, contVet, contRaca;
-    Cidade cid[100]{2, "avgre", "sp"};
-    Raca raca[100];
-    Tutor tutor[100]{1, "asdf", "435.284.888-32", "aaa", 2};
-    Animal animal[100];
-    Veterinario vet[100];
-    Consulta consul[100];
-    leituraConsulta(consul, contConsul, animal, tutor, raca,vet,cid, contAnimal, contRaca,contVet,contCid);
-    leituraVet(vet, contVet);
-    leituraAnimal(animal, contAnimal, tutor, cid, contTutor, contCid);
-    leituraTutor(tutor, cid, contTutor, contCid);
-    leituraRaca(raca, contRaca);
+    int contCid = 1, contTutor = 1, contAnimal = 1, contConsul = 1, contVet = 1, contRaca = 1;
+    Cidade cid[100]; cid[1]={1, "Candido-Mota", "sp"};
+    Raca raca[100]; raca[1]={1, "rato"};
+    Tutor tutor[100];tutor[1]={1, "Gustavo", "435.284.888-32", "aaa", 1};
+    Animal animal[100]; animal[1]={1, "toto", 1, 12, 10.2, 1};
+    Veterinario vet[100]; vet[1]={1, "Duzao", "Rua A", 1};
+    Consulta consul[100];consul[1]={1, 1, 1," 10/10/2010", 120.00};
     leituraCid(cid, contCid);
+    leituraTutor(tutor, cid, contTutor, contCid);
+    leituraVet(vet, cid, contVet, contCid);
+    leituraRaca(raca, contRaca);
+    leituraAnimal(animal, contAnimal, tutor, cid, raca, contTutor, contCid, contRaca);
+    leituraConsulta(consul, contConsul, animal, tutor, raca,vet,cid, contAnimal, contRaca,contVet,contCid);
     int c;
     c=0;
     while(c != 6){
-     cout<<"Digite o numero 1 caso queria resgistrar o Tutor: \n Digite o numero 2 caso queira registrar o animal:\n Digite o numero 3 caso queria realizar consulta:\n Digite 4 caso queira buscar uma consulta por data:\n Digite o numero 5 caso queira buscar consultas em determinada data por determinado veterinario:\n Digite 6 para sair;";
-           cin>>c;
+        cout<<"\n\n========================================================"<<endl;
+         cout<<"Digite o numero 1 caso queria resgistrar o Tutor: \n Digite o numero 2 caso queira registrar o animal:\n Digite o numero 3 caso queria realizar consulta:\n Digite 4 caso queira buscar uma consulta por data:\n Digite o numero 5 caso queira buscar consultas em determinada data por determinado veterinario:\n Digite 6 para sair;";
+          cout<<"\n\n========================================================"<<endl;
+         cin>>c;
 		switch (c){
             case 1:
                 registroTutores(tutor, cid, &contTutor, &contCid);
@@ -135,11 +137,7 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
         getline(cin, c[i].nome);
         cout << "cpf: " << endl;
         getline(cin, c[i].cpf);
-        if (validarCpf(c, i) != true)
-        {
-            cout << "cpf invalido!!!!!!";
-            break;
-        }
+        validarCpf(c, i);
         cout << "endereco: " << endl;
         getline(cin, c[i].endereco);
         cout << "codigo da cidade" << endl;
@@ -181,8 +179,8 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
         tutorAtt[i].endereco = a[j].endereco;
         tutorAtt[i].cpf = a[j].cpf;
         tutorAtt[i].codigo_cidade = a[j].codigo_cidade;
-        j++;
         i++;
+        j++;
     }
     while (k < contC)
     {
@@ -191,18 +189,19 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
         tutorAtt[i].endereco = c[k].endereco;
         tutorAtt[i].cpf = c[k].cpf;
         tutorAtt[i].codigo_cidade = c[k].codigo_cidade;
-        k++;
         i++;
+        k++;
     }
     contT = i;
     for (i = 0; i < contT; i++)
     {
-        cout << "\ncodigo: " << tutorAtt[i].codigo;
-        cout << "\nnome: " << tutorAtt[i].nome;
-        cout << "\nendereco: " << tutorAtt[i].endereco;
-        cout << "\ncpf: " << tutorAtt[i].cpf;
-        cout << "\ncodigo cidade: " << tutorAtt[i].codigo_cidade;
+        a[i].codigo = tutorAtt[i].codigo;
+        a[i].nome = tutorAtt[i].nome;
+        a[i].endereco = tutorAtt[i].endereco;
+        a[i].cpf = tutorAtt[i].cpf;
+        a[i].codigo_cidade = tutorAtt[i].codigo_cidade;
     }
+    *contA = contT;
 }
 
 void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], int &contA, int &contRaca, int &contCid, int& contTutor)
@@ -212,20 +211,20 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
     for (int saida = 1; i < 100 && saida != 0; i++)
     {
         cout << "\ncodigo do animal: ";
-        cin >> a[i].codigo;
+        cin >> b[i].codigo;
         cin.ignore();
         cout << "\nnome: ";
-        getline(cin, a[i].nome);
+        getline(cin, b[i].nome);
         cout << "\ncodigo da raca: ";
-        cin >> a[i].codigo_raca;
-        buscarRaca(a, raca, i, contRaca);
+        cin >> b[i].codigo_raca;
+        buscarRaca(b, raca, i, contRaca);
         cout << "\nidade: ";
-        cin >> a[i].idade;
+        cin >> b[i].idade;
         cout << "\npeso: ";
-        cin >> a[i].peso;
+        cin >> b[i].peso;
         cout << "\ncodigo tutor: ";
-        cin >> a[i].codigo_tutor;
-        buscarTutor(a, tutor, cidade, i, contCid, contTutor);
+        cin >> b[i].codigo_tutor;
+        buscarTutor(b, tutor, cidade, i, contCid, contTutor);
         cout << "\ndigite 0 para parar";
         cin >> saida;
     }
@@ -254,7 +253,7 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
         }
     }
     while(j<contA){
-        attAnimal[i].codigo = a[j++].codigo;
+            attAnimal[i].codigo = a[j++].codigo;
             attAnimal[i].nome = a[j].nome;
             attAnimal[i].codigo_raca= a[j].codigo_raca;
             attAnimal[i].idade= a[j].idade;
@@ -263,13 +262,23 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
             i++;
     }
     while(k<contB){
-        attAnimal[i].codigo = b[k++].codigo;
+            attAnimal[i].codigo = b[k++].codigo;
             attAnimal[i].nome = b[k].nome;
             attAnimal[i].codigo_raca= b[k].codigo_raca;
             attAnimal[i].idade= b[k].idade;
             attAnimal[i].peso= b[k].peso;
             attAnimal[i].codigo_tutor= b[k].codigo_tutor;
+            i++;
     }
+    for(i = 0; i<contT; i++){
+           a[i].codigo = attAnimal[i].codigo; 
+           a[i].nome = attAnimal[i].nome;
+           a[i].codigo_raca = attAnimal[i].codigo_raca;
+           a[i].idade = attAnimal[i].idade;
+           a[i].peso = attAnimal[i].peso;
+           a[i].codigo_tutor = attAnimal[i].codigo_tutor; 
+    }
+    contA = contT;
 }
 
 void realizarConsulta(Consulta a[], Animal animal[], Tutor tutor[], Raca raca[], Veterinario vet[], Cidade cid[], int &contA, int& contRaca, int& contAnimal, int& contVet, int& contCid){
@@ -429,10 +438,12 @@ void buscarTutor(Animal a[], Tutor b[], Cidade c[], int& i, int& contTutor, int&
 	}
 }	
 
-bool validarCpf(Tutor a[], int &i)
+void validarCpf(Tutor a[], int &i)
 {
-    string numeros;
-    for (char c : a[i].cpf)
+    bool valido = false;
+    while(valido == false){
+        string numeros;
+        for (char c : a[i].cpf)
     {
         if (isdigit(c))
         {
@@ -441,20 +452,22 @@ bool validarCpf(Tutor a[], int &i)
     }
     if (numeros.length() != 11)
     {
-        return false;
-    }
-    bool todosIguais = true;
-    for (int j = 1; j < 11; j++)
-    {
+        cout<<"\ncpf com menos ou mais de 11 digitos. Tente denovo: ";
+        cin>>a[i].cpf;
+    }else{
+        bool todosIguais = true;
+        for (int j = 1; j < 11; j++)
+        {
         if (numeros[j] != numeros[0])
         {
             todosIguais = false;
-            break;
         }
     }
-    if (todosIguais)
-        return false;
-    int soma = 0;
+    if (todosIguais){
+        cout<<"\ntodos os numeros do cpf sao iguais. Tente denovo: ";
+        cin>>a[i].cpf;
+    }else{
+        int soma = 0;
     for (int j = 0; j < 9; j++)
     {
         soma += (numeros[j] - '0') * (10 - j);
@@ -465,9 +478,10 @@ bool validarCpf(Tutor a[], int &i)
 
     if (primeiroDigito != (numeros[9] - '0'))
     {
-        return false;
-    }
-    soma = 0;
+        cout<<"\ncpf invalido. Tente denovo: ";
+        cin>>a[i].cpf;
+    }else{
+         soma = 0;
     for (int j = 0; j < 10; j++)
     {
         soma += (numeros[j] - '0') * (11 - j);
@@ -478,10 +492,15 @@ bool validarCpf(Tutor a[], int &i)
 
     if (segundoDigito != (numeros[10] - '0'))
     {
-        return false;
+        cout<<"cpf invalido. Tente denovo: ";
+        cin>>a[i].cpf;
+    }else{
+        valido = true;
     }
-
-    return true;
+    }
+    }  
+    }
+    }     
 }
 
 void buscarEstado(Tutor a[], Cidade b[], int &i, int &contCid)
@@ -553,7 +572,7 @@ void buscarVeterinario(Consulta a[], Veterinario b[], Cidade c[], int& i, int& c
 }
 
 
-void leituraCid(struct Cidade v[], int &contCity){
+void leituraCid(Cidade v[], int &contCity){
     int i=0;
     for(int saida = 1; i<100 && saida != 0; i++ ){
         cout<<"Codigo da city:";
@@ -563,11 +582,10 @@ void leituraCid(struct Cidade v[], int &contCity){
         getline(cin,v[i].nome);
         cout<<"Uf da city:";
         cin>>v[i].uf;
-        cout<<"digite 0 para parar:";
+        contCity++;
+        cout<<"\ndigite 0 para parar:";
         cin>>saida;
     }
-   contCity = i-1;
-
 }
 
 void leituraRaca(Raca v[], int &contRaca ){
@@ -578,12 +596,10 @@ void leituraRaca(Raca v[], int &contRaca ){
         cin.ignore();
         cout <<"Descricao do animal:";
         getline(cin,v[i].descricao);
-        cout<<"digite 0 para parar:";
+        contRaca++;
+        cout<<"\ndigite 0 para parar:";
         cin>>saida;
     }
-
-    contRaca = i-1;
-
 }
 
 void leituraTutor(Tutor v[], Cidade cidade[], int &contTutor, int &contCid){
@@ -597,22 +613,19 @@ void leituraTutor(Tutor v[], Cidade cidade[], int &contTutor, int &contCid){
         cin.ignore();
         cout<<"Cpf do Tutor";
         getline(cin, v[i].cpf);
-        if(validarCpf(v, i) == false){
-            break;
-        };
+        validarCpf(v, i);
         cin.ignore();
         cout<<"Endereco do Tutor";
         getline(cin, v[i].endereco);
         cout<<"Codigo da Cidade do Tutor:";
         cin>>v[i].codigo_cidade;
         buscarEstado(v, cidade, i, contCid);
-        cout<<"digite 0 para parar:";
+        contTutor++;
+        cout<<"\ndigite 0 para parar:";
         cin>>saida;
     }
-    contTutor= i-1;
-
 }
-void leituraAnimal(Animal v[], int &contAnimal, Tutor b[],Cidade c[], int &contTutor, int &contCid){
+void leituraAnimal(Animal v[], int &contAnimal, Tutor b[],Cidade c[], Raca raca[], int &contTutor, int &contCid, int &contRaca){
     int i=0;
     for(int saida =1; i<100 && saida!=0;i++){
         cout<<"Codigo do Animal:";
@@ -622,6 +635,7 @@ void leituraAnimal(Animal v[], int &contAnimal, Tutor b[],Cidade c[], int &contT
         getline(cin, v[i].nome);
         cout<<"Codigo da Raca:";
         cin>>v[i].codigo_raca;
+        buscarRaca(v, raca, i, contRaca);
         cout<<"Idade do Animal:";
         cin>>v[i].idade;
         cout<<"Peso do Animal:";
@@ -629,47 +643,60 @@ void leituraAnimal(Animal v[], int &contAnimal, Tutor b[],Cidade c[], int &contT
         cout<<"Codigo do Tutor:";
         cin>>v[i].codigo_tutor;
         buscarTutor( v,b,c,i, contTutor, contCid);
-        cout<<"digite 0 para parar:";
+        contAnimal++;
+        cout<<"\ndigite 0 para parar:";
         cin>>saida;
     }
-    contAnimal=i-1;
 }
-void leituraVet(Veterinario v[], int &contVet){
+void leituraVet(Veterinario v[], Cidade cid[], int &contVet, int& contCid){
     int i=0;
     for(int saida =1;i<100 && saida!=0;i++){
-        cout<<"Codigo do Veterinario:";
+        int achou=0;
+        cout<<"\nCodigo do Veterinario:";
         cin>>v[i].codigo;
         cin.ignore();
-        cout<<"Nome Veterinario:";
+        cout<<"\nNome Veterinario:";
         getline(cin, v[i].nome);
         cin.ignore();
-        cout<<"Endereco do Veterinario:";
+        cout<<"\nEndereco do Veterinario:";
         getline(cin, v[i].endereco);
-        cout<<"Codigo da Cidade:";
+        cout<<"\nCodigo da Cidade:";
         cin>>v[i].codigo_cidade;
-        cout<<"digite 0 para parar:";
+        contVet++;
+        while(achou == 0){
+            for(int j=0; j<contCid; j++){
+                if(v[i].codigo_cidade == cid[j].codigo){
+                    cout<<"\nCidade: "<< cid[j].nome;
+                    achou++;
+                }
+            }
+            if(achou == 0){
+                cout<<"\nCodigo de cidade nao encontrado. Tente denovo: ";
+                cin>>v[i].codigo_cidade;
+            }
+        }
+        cout<<"\ndigite 0 para parar:";
         cin>>saida;
     }
-    contVet=i-1;
 }
 
 void leituraConsulta(Consulta v[], int &contConsulta, Animal b[], Tutor c[], Raca d[], Veterinario vet[], Cidade cid[],int &contAnimal, int &contRaca, int& contVet, int& contCid){
     int i=0;
     for(int saida=1;i<100 && saida!=0;i++){
-        cout<<"Codigo da Consulta:";
+        cout<<"\nCodigo da Consulta:";
         cin>>v[i].codigo;
-        cout<<"Codigo do Animal:";
+        cout<<"\nCodigo do Animal:";
         cin>>v[i].codigo_animal;
         buscarAnimal( v, b, c,d, i, contAnimal, contRaca);
-        cout<<"Codigo do veterinario:";
+        cout<<"\nCodigo do veterinario:";
         cin>>v[i].codigo_veterinario;
         buscarVeterinario(v, vet, cid, i, contVet, contCid);
-        cout<<"Data da consulta:";
+        cout<<"\nData da consulta:";
         cin>>v[i].data;
-        cout<<"Valor da consulta:";
+        cout<<"\nValor da consulta:";
         cin>>v[i].valor;
-        cout<<"digite 0 para parar:";
+        contConsulta++;
+        cout<<"\ndigite 0 para parar:";
         cin>>saida;
     }
-    contConsulta=i-1;
 }
