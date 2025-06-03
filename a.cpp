@@ -144,21 +144,22 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
     cout << "valores para a inclusao: " << endl;
     for (int saida = 1; i < 100 && saida != 0; i++)
     {
-        cout << "codigo: " << endl;
+        cout << "\ncodigo: ";
         cin >> c[i].codigo;
         cin.ignore();
-        cout << "nome: " << endl;
+        cout << "\nnome: ";
         getline(cin, c[i].nome);
-        cout << "cpf: " << endl;
+        cout << "\ncpf: ";
         getline(cin, c[i].cpf);
         validarCpf(c, i);
-        cout << "endereco: " << endl;
+        cin.ignore();
+        cout << "\nendereco: ";
         getline(cin, c[i].endereco);
-        cout << "codigo da cidade" << endl;
+        cout << "\ncodigo da cidade";
         cin >> c[i].codigo_cidade;
         cin.ignore();
         buscarEstado(c, b, i, *contCid);
-        cout << "digite 0 para sair ou qualquer outro numero para continuar: " << endl;
+        cout << "\ndigite 0 para sair ou qualquer outro numero para continuar: " << endl;
         cin >> saida;
         cin.ignore();
     }
