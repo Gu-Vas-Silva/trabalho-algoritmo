@@ -165,7 +165,6 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
     }
     contC = i;
     contT = contC + *contA;
-    cout << "\n\ncontT = " << contT;
     Tutor tutorAtt[contT];
     for (i = 0; j < *contA && k < contC; i++)
     {
@@ -251,43 +250,48 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
     {
         if (a[i].codigo < b[i].codigo)
         {
-            attAnimal[i].codigo = a[j++].codigo;
+            attAnimal[i].codigo = a[j].codigo;
             attAnimal[i].nome = a[j].nome;
             attAnimal[i].codigo_raca = a[j].codigo_raca;
             attAnimal[i].idade = a[j].idade;
             attAnimal[i].peso = a[j].peso;
             attAnimal[i].codigo_tutor = a[j].codigo_tutor;
+            j++;
         }
         if (a[i].codigo > b[i].codigo)
         {
-            attAnimal[i].codigo = b[k++].codigo;
+            attAnimal[i].codigo = b[k].codigo;
             attAnimal[i].nome = b[k].nome;
             attAnimal[i].codigo_raca = b[k].codigo_raca;
             attAnimal[i].idade = b[k].idade;
             attAnimal[i].peso = b[k].peso;
             attAnimal[i].codigo_tutor = b[k].codigo_tutor;
+            k++;
         }
     }
     while (j < contA)
     {
-        attAnimal[i].codigo = a[j++].codigo;
+        attAnimal[i].codigo = a[j].codigo;
         attAnimal[i].nome = a[j].nome;
         attAnimal[i].codigo_raca = a[j].codigo_raca;
         attAnimal[i].idade = a[j].idade;
         attAnimal[i].peso = a[j].peso;
         attAnimal[i].codigo_tutor = a[j].codigo_tutor;
+        j++;
         i++;
     }
     while (k < contB)
     {
-        attAnimal[i].codigo = b[k++].codigo;
+        attAnimal[i].codigo = b[k].codigo;
         attAnimal[i].nome = b[k].nome;
         attAnimal[i].codigo_raca = b[k].codigo_raca;
         attAnimal[i].idade = b[k].idade;
         attAnimal[i].peso = b[k].peso;
         attAnimal[i].codigo_tutor = b[k].codigo_tutor;
+        k++;
         i++;
     }
+    contT=i;
     for (i = 0; i < contT; i++)
     {
         a[i].codigo = attAnimal[i].codigo;
@@ -653,7 +657,7 @@ void buscarAnimal(Consulta a[], Animal b[], Tutor c[], Raca d[], int &i, int &co
             cin >> a[i].codigo_animal;
         }
     }
-    for (int j = 0; j < contRaca; j++)
+    for (int j = 0; j <= contRaca; j++)
     {
         if (b[k].codigo_raca == d[j].codigo)
         {
