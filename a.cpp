@@ -1,3 +1,4 @@
+
 #include <ctime>
 #include <iostream>
 #include <conio.h>
@@ -71,9 +72,9 @@ void buscarVeterinario(Consulta[], Veterinario[], Cidade[], int &, int &, int &)
 void intervaloData(Consulta[], Animal[], Veterinario[], int &);
 time_t converterStringParaData(string &);
 void mostrarConsultaPorIntervalo(Consulta[], Animal[], Veterinario[], time_t &, time_t &, int &);
-void intervaloDataVet(Consulta[], Animal[], Veterinario[], int &, int &);
+void intervaloDataVet(Consulta[], Animal[], Veterinario[], int &, int &, int&);
 void buscarVetIntervalo(Veterinario[], int &, int *);
-void mostrarConsultaPorIntervaloVet(Consulta[], Animal[], Veterinario[], time_t &, time_t &, int &, int &, int &);
+void mostrarConsultaPorIntervaloVet(Consulta[], Animal[], Veterinario[], time_t &, time_t &, int &, int &, int &, int&);
 int main()
 {
     int contCid = 1, contTutor = 1, contAnimal = 1, contConsul = 1, contVet = 1, contRaca = 1;
@@ -121,7 +122,7 @@ int main()
             break;
 
         case 5:
-            intervaloDataVet(consul, animal, vet, contVet, contConsul);
+            intervaloDataVet(consul, animal, vet, contVet, contConsul, contAnimal);
             break;
 
         default:
@@ -346,7 +347,7 @@ void intervaloData(Consulta a[], Animal animal[], Veterinario vet[], int &contA)
     mostrarConsultaPorIntervalo(a, animal, vet, dataInicial, dataFinal, contA);
 }
 
-void intervaloDataVet(Consulta a[], Animal animal[], Veterinario vet[], int &contVet, int &contA)
+void intervaloDataVet(Consulta a[], Animal animal[], Veterinario vet[], int &contVet, int &contA, int &contAnimal)
 {
     string dataInicialS, dataFinalS;
     time_t dataInicial, dataFinal;
@@ -362,7 +363,7 @@ void intervaloDataVet(Consulta a[], Animal animal[], Veterinario vet[], int &con
     cout << "\ndigite a data final: ";
     getline(cin, dataFinalS);
     dataFinal = converterStringParaData(dataFinalS);
-    mostrarConsultaPorIntervaloVet(a, animal, vet, dataInicial, dataFinal, codigo, contA, contVet);
+    mostrarConsultaPorIntervaloVet(a, animal, vet, dataInicial, dataFinal, codigo, contA, contVet, contAnimal);
 }
 void buscarVetIntervalo(Veterinario a[], int &contVet, int *codigo)
 {
@@ -425,7 +426,7 @@ void mostrarConsultaPorIntervalo(Consulta a[], Animal animal[], Veterinario vet[
     }
 }
 
-void mostrarConsultaPorIntervaloVet(Consulta a[], Animal animal[], Veterinario vet[], time_t &dataInicial, time_t &dataFinal, int &codigo, int &contA, int &contVet)
+void mostrarConsultaPorIntervaloVet(Consulta a[], Animal animal[], Veterinario vet[], time_t &dataInicial, time_t &dataFinal, int &codigo, int &contA, int &contVet, int &contAnimal)
 {
     time_t inicio = dataInicial;
     time_t final = dataFinal;
@@ -444,9 +445,9 @@ void mostrarConsultaPorIntervaloVet(Consulta a[], Animal animal[], Veterinario v
                     cout << "\nconsulta na data: " << a[j].data;
                     cout << "\nno valor: " << a[j].valor;
                     s = s + a[j].valor;
-            for (int k= 0;  k < contA; k++){
+            for (int k= 0;  k < contAnimal; k++){
                       if (a[j].codigo_animal == animal[k].codigo){
-                    cout << "\nanimal consultado: " << animal[j].nome;
+                    cout << "\nanimal consultado: " << animal[k].nome;
                 }
             }
           }
@@ -487,7 +488,7 @@ time_t converterStringParaData(string &data)
     }
     tm.tm_mday = dia;
     tm.tm_mon = mes - 1;
-    tm.tm_year = ano - 2000;
+    tm.tm_year = ano - 1900;
     return mktime(&tm);
 }
 
