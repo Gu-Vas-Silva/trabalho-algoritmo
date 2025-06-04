@@ -62,7 +62,7 @@ void leituraCid(Cidade[], int &);
 void registroTutores(Tutor[], Cidade[], int *, int *);
 void validarCpf(Tutor[], int &);
 void buscarEstado(Tutor[], Cidade[], int &, int &);
-void registroAnimais(Animal[], Raca[], Tutor[], Cidade[], int &, int &, int &, int &);
+void registroAnimais(Animal[], Raca[], Tutor[], Cidade[], int *, int &, int &, int &);
 void buscarRaca(Animal[], Raca[], int &, int &);
 void buscarTutor(Animal[], Tutor[], Cidade[], int &, int &, int &);
 void realizarConsulta(Consulta[], Animal[], Tutor[], Raca[], Veterinario[], Cidade[], int &, int &, int &, int &, int &);
@@ -109,7 +109,7 @@ int main()
             break;
 
         case 2:
-            registroAnimais(animal, raca, tutor, cid, contAnimal, contRaca, contCid, contTutor);
+            registroAnimais(animal, raca, tutor, cid, &contAnimal, contRaca, contCid, contTutor);
             break;
 
         case 3:
@@ -219,7 +219,7 @@ void registroTutores(Tutor a[], Cidade b[], int *contA, int *contCid)
     *contA = contT;
 }
 
-void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], int &contA, int &contRaca, int &contCid, int &contTutor)
+void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], int *contA, int &contRaca, int &contCid, int &contTutor)
 {
     Animal b[100];
     int contB, i = 0, contT, k = 0, j = 0;
@@ -240,15 +240,16 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
         cout << "\ncodigo tutor: ";
         cin >> b[i].codigo_tutor;
         buscarTutor(b, tutor, cidade, i, contCid, contTutor);
+        contB++;
         cout << "\ndigite 0 para parar";
         cin >> saida;
     }
     contB = i;
-    contT = contA + contB;
+    contT = *contA + contB;
     Animal attAnimal[contT];
-    for (i = 0; j < contA && k < contB; i++)
+    for (i = 0; j < *contA && k < contB; i++)
     {
-        if (a[i].codigo < b[i].codigo)
+        if (a[j].codigo < b[k].codigo)
         {
             attAnimal[i].codigo = a[j].codigo;
             attAnimal[i].nome = a[j].nome;
@@ -258,7 +259,7 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
             attAnimal[i].codigo_tutor = a[j].codigo_tutor;
             j++;
         }
-        if (a[i].codigo > b[i].codigo)
+        if (a[j].codigo > b[k].codigo)
         {
             attAnimal[i].codigo = b[k].codigo;
             attAnimal[i].nome = b[k].nome;
@@ -269,7 +270,7 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
             k++;
         }
     }
-    while (j < contA)
+    while (j < *contA)
     {
         attAnimal[i].codigo = a[j].codigo;
         attAnimal[i].nome = a[j].nome;
@@ -301,7 +302,7 @@ void registroAnimais(Animal a[], Raca raca[], Tutor tutor[], Cidade cidade[], in
         a[i].peso = attAnimal[i].peso;
         a[i].codigo_tutor = attAnimal[i].codigo_tutor;
     }
-    contA = contT;
+    *contA = contT;
 }
 
 void realizarConsulta(Consulta a[], Animal animal[], Tutor tutor[], Raca raca[], Veterinario vet[], Cidade cid[], int &contA, int &contRaca, int &contAnimal, int &contVet, int &contCid)
@@ -313,7 +314,7 @@ void realizarConsulta(Consulta a[], Animal animal[], Tutor tutor[], Raca raca[],
         a[i].codigo = i;
         cout << "\ncodigo do animal: ";
         cin >> a[i].codigo_animal;
-        buscarAnimal(a, animal, tutor, raca, i, contRaca, contAnimal);
+        buscarAnimal(a, animal, tutor, raca, i, contAnimal, contRaca);
         cout << "\ncodigo do veterinario: ";
         cin >> a[i].codigo_veterinario;
         buscarVeterinario(a, vet, cid, i, contVet, contCid);
